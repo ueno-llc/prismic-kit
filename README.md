@@ -104,7 +104,9 @@ export default class PrismicStore {
   ]))
 
   constructor() {
-    this.articles.replace(await this.fetchArticles());
+    this.fetchArticles().then(articles => {
+      this.articles.replace(articles);
+    });
   }
 }
 ```
