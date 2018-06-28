@@ -2,7 +2,7 @@
   "name": "@ueno/prismic-kit",
   "version": "1.0.0",
   "description": "Helpful tools for building Prismic apps in React",
-  "main": "query.js",
+  "main": "index.js",
   "scripts": {
     "build": "babel src/ -d dist/",
     "lint": "eslint 'src/**/*.js' 'test/**/*.js'",
@@ -41,6 +41,7 @@
     "prop-types": "^15.6.2",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
+    "require-uncached": "^1.0.3",
     "sinon": "^6.0.1",
     "sinon-chai": "^3.2.0"
   },

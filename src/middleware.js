@@ -1,30 +1,20 @@
 import { Router } from 'express';
 import Prismic from 'prismic-javascript';
 import dotProp from 'dot-prop';
+import PrismicKit from '.';
 
 export default function prismicMiddleware(config = {}) {
   const {
-    repoName,
-    accessToken,
     webhookCallback = null,
     webhookSecret = null,
     linkResolver = () => '/',
   } = config;
   const router = Router();
 
-  // Validate that there's a Prismic repo
+  const { repoName, accessToken } = PrismicKit.config();
+
   if (!repoName) {
-    throw new TypeError('You must specify a Prismic repository.');
-  }
-
-  // Validate that the Prismic repo name is a string
-  if (typeof repoName !== 'string') {
-    throw new TypeError(`Expected Prismic repository name to be a string, but got ${typeof repoName}`);
-  }
-
-  // If there's an access token, validate that it's a string
-  if (accessToken && typeof accessToken !== 'string') {
-    throw new TypeError(`Expected Prismic access token to be a string, but got ${typeof accessToken}`);
+    throw new Error('PrismicKit.config() must be called before Express middleware can be used.');
   }
 
   // If there's a webhook callback, validate that it's a function

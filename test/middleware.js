@@ -3,6 +3,7 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 import Prismic from 'prismic-javascript';
+import PrismicKit from '../src';
 import middleware from '../src/middleware';
 import testRoute from './util/test-route';
 
@@ -15,16 +16,12 @@ const previewUrl = '/hello';
 const linkResolver = () => {};
 
 describe('Express middleware', () => {
-  it('throws a TypeError if no Prismic repo is set', () => {
-    expect(() => middleware()).to.throw(TypeError);
+  before(() => {
+    PrismicKit.config({ repoName, accessToken });
   });
 
-  it('throws a TypeError if Prismic repo is not a string', () => {
-    expect(() => middleware({ repoName: [] })).to.throw(TypeError);
-  });
-
-  it('throws a TypeError if Prismic access token is not a string', () => {
-    expect(() => middleware({ repoName, accessToken: [] })).to.throw(TypeError);
+  after(() => {
+    delete require.cache[require.resolve('../src')];
   });
 
   it('throws a TypeError if the webhook callback is not a function', () => {

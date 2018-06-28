@@ -8,6 +8,7 @@
 
 - [Installation](#installation)
 - [Usage](#usage)
+  - [Configuration](#configuration)
   - [Fetching on the client](#fetching-on-the-client)
   - [Rendering slice zones](#rendering-slice-zones)
   - [Enabling previews and webhooks](#enabling-previews-and-webhooks)
@@ -36,32 +37,33 @@ This library has the following peer dependencies:
 
 ## Usage
 
-### Fetching on the client
+### Configuration
 
-The `query` function is designed to make calls to the Prismic API faster. On the client, the API wrapper created by `Prismic.getAPI()` is cached, which saves on network requests.
-
-This is designed for use with react-jobs, but you can also use it standalone.
-
-First, create a utility file and export a call the `query()` function:
+To use the querying function `query` or Express middleware `middleware`, you'll need to configure prismic-kit with your Prismic repo name, link resolver, and access token. The access token is optional, but you need it to fetch Prismic previews.
 
 ```js
-// utils/query-prismic.js
-import query from '@ueno/prismic-kit/query';
+import PrismicKit from '@ueno/prismic-kit';
+import linkResolver from './utils/prismic-link-resolver';
 
-// accessToken is optional, but you need it if you want to fetch Prismic previews
-export default query({
-  repo: 'ueno-llc',
+PrismicKit.config = {
+  repoName: 'ueno-llc',
   accessToken: process.env.PRISMIC_ACCESS_TOKEN,
-});
+  linkResolver,
+};
 ```
 
-Then, in your component file, attach this utility to a react-jobs job.
+### Fetching on the client
+
+*Make sure to call to [configure prismic-kit](#configuration) before using this.*
+
+The `query` function is designed to make calls to the Prismic API faster. It generates the API wrapper from `Prismic.getAPI()` for you, and on the client, the wrapper is cached, which saves cuts down on network requests.
+
+This is designed for use with [react-jobs](https://www.npmjs.com/package/react-jobs), but you can also use it standalone.
 
 ```js
-// app.js
 import React, { Component } from 'react';
 import { withJob } from 'react-jobs';
-import queryPrismic from 'utils/query-prismic';
+import queryPrismic from '@ueno/prismic-kit/query';
 
 @withJob({
   work: queryPrismic(api => api.getSingle('home_page')),
@@ -80,23 +82,9 @@ export default class App extends Component {
 In the callback, you get access to a Prismic API wrapper, as well as the props of the component.
 
 ```js
-// article.js
-import React, { Component } from 'react';
-import { withJob } from 'react-jobs';
-import queryPrismic from 'utils/query-prismic';
-
 @withJob({
   work: queryPrismic((api, props) => api.getByUID('article', props.uid)),
 })
-export default class Article extends Component {
-  render() {
-    const page = this.props.jobResult;
-
-    return (
-      <h1>{page.data.title}</h1>
-    );
-  }
-}
 ```
 
 You can also use the function standalone if need be. Basically, you just call it twice.
@@ -170,6 +158,8 @@ export default ({ page }) => (
 
 ### Enabling previews and webhooks
 
+*Make sure to call to [configure prismic-kit](#configuration) before using this.*
+
 To enable preview and webhook support, use this Express middleware.
 
 - The route `GET /preview` is used for Prismic previews.
@@ -194,13 +184,10 @@ import linkResolver from './prismic-link-resolver';
 const app = express();
 
 app.use('/api/prismic', prismicMiddleware({
-  repo: 'ueno-llc',
-  accessToken: process.env.PRISMIC_ACCESS_TOKEN,
   webhookCallback: () => {
     return cache.clear();
   },
   webhookSecret: process.env.PRISMIC_WEBHOOK_SECRET,
-  linkResolver,
 }));
 ```
 
