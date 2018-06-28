@@ -15,7 +15,11 @@
     "url": "git+https://github.com/ueno-llc/prismic-kit.git"
   },
   "keywords": [
-    "prismic-kit"
+    "prismic",
+    "kit",
+    "tools",
+    "utilities",
+    "slices"
   ],
   "author": "ueno. <hi@ueno.co> (https://ueno.co)",
   "license": "MIT",
