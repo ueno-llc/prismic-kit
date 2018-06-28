@@ -232,7 +232,7 @@ export default class App extends Component {
 ## Local Development
 
 ```bash
-git clone https://github.com/ueno/prismic-kit
+git clone https://github.com/ueno-llc/prismic-kit
 cd prismic-kit
 npm install
 npm test
