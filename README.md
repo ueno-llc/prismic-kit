@@ -56,9 +56,9 @@ You can also get the config you set by calling `PrismicKit.config()` with no arg
 
 ### Fetching on the client
 
-*Make sure to call to [configure prismic-kit](#configuration) before using this.*
+*Make sure to [configure prismic-kit](#configuration) before using this.*
 
-The `query` function is designed to make calls to the Prismic API faster. It generates the API wrapper from `Prismic.getAPI()` for you, and on the client, the wrapper is cached, which saves cuts down on network requests.
+The `query` function is designed to make calls to the Prismic API faster. It generates the API wrapper from `Prismic.getAPI()` for you, and on the client, the wrapper is cached, which cuts down on network requests.
 
 This is designed for use with [react-jobs](https://www.npmjs.com/package/react-jobs), but you can also use it standalone.
 
@@ -160,7 +160,7 @@ export default ({ page }) => (
 
 ### Enabling previews and webhooks
 
-*Make sure to call to [configure prismic-kit](#configuration) before using this.*
+*Make sure to [configure prismic-kit](#configuration) before using this.*
 
 To enable preview and webhook support, use this Express middleware.
 
@@ -168,13 +168,13 @@ To enable preview and webhook support, use this Express middleware.
   - A Prismic preview cookie is sent with the response.
   - A `302 Found` status is returned to redirect the user to the correct page.
 - The route `POST /webhook` is used for triggering webhooks.
-  - If you specify a `webhookCallback` in the middleware, triggering the webhook will run the given function. The function can be asynchronous or return a Promise. When the function finishes, the server returns a `200` status. If there's an error, the server returns a `500` status.
+  - If you specify a `webhookCallback` in the middleware, triggering the webhook will run the given function. The function can be asynchronous or return a Promise.
   - If you specify a `webhookSecret`, the webhook will only trigger if the given secret is sent in the body of the request. You can configure this secret in the "Webhooks" section of your Prismic repo's settings.
   - This route can return any of these status codes:
     - `200 OK` if the webhook callback finished.
     - `500 Internal Server Error` if the webhook threw an error or a Promise rejected.
     - `400 Bad Request` if a secret was sent in the request, but you didn't configure a `webhookSecret`.
-    - `401 Unauthorized` if the secret sent in the request doesn't match `webhookSecret`.
+    - `401 Unauthorized` if the secret sent in the request doesn't match `webhookSecret`, or if no secret was sent.
 
 ```js
 // server.js
