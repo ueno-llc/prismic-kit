@@ -2,7 +2,7 @@
   "name": "@ueno/prismic-kit",
   "version": "1.0.0",
   "description": "Helpful tools for building Prismic apps in React",
-  "main": "index.js",
+  "main": "query.js",
   "scripts": {
     "build": "babel src/ -d dist/",
     "lint": "eslint 'src/**/*.js' 'test/**/*.js'",

@@ -62,3 +62,6 @@ typings/
 
 # macOS Spotlight files
 .DS_Store
+
+# Compiled files
+dist
