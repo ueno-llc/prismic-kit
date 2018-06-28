@@ -45,12 +45,14 @@ To use the querying function `query` or Express middleware `middleware`, you'll 
 import PrismicKit from '@ueno/prismic-kit';
 import linkResolver from './utils/prismic-link-resolver';
 
-PrismicKit.config = {
+PrismicKit.config({
   repoName: 'ueno-llc',
   accessToken: process.env.PRISMIC_ACCESS_TOKEN,
   linkResolver,
-};
+});
 ```
+
+You can also get the config you set by calling `PrismicKit.config()` with no arguments.
 
 ### Fetching on the client
 
@@ -92,7 +94,7 @@ You can also use the function standalone if need be. Basically, you just call it
 ```js
 import { observable } from 'mobx';
 import Prismic from 'prismic';
-import queryPrismic from 'utils/query-prismic';
+import queryPrismic from '@ueno/prismic-kit/query';
 
 export default class PrismicStore {
   @observable articles = []
