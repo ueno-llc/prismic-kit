@@ -35,6 +35,8 @@ This library has the following peer dependencies:
 }
 ```
 
+You also need `babel-polyfill`, because the code has transpiled async functions.
+
 ## Usage
 
 ### Configuration
