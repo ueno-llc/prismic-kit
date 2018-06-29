@@ -7,11 +7,10 @@ export default function prismicMiddleware(config = {}) {
   const {
     webhookCallback = null,
     webhookSecret = null,
-    linkResolver = () => '/',
   } = config;
   const router = Router();
 
-  const { repoName, accessToken } = PrismicKit.config();
+  const { repoName, accessToken, linkResolver } = PrismicKit.config();
 
   if (!repoName) {
     throw new Error('PrismicKit.config() must be called before Express middleware can be used.');
