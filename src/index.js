@@ -22,7 +22,7 @@ export default {
     }
 
     // Validate that the link resolver is a function
-    if (typeof opts.linkResolver !== 'undefined') {
+    if (typeof opts.linkResolver !== 'function') {
       throw new TypeError(`Expected Prismic link resolver to be a function, but got ${typeof opts.linkResolver}`);
     }
 

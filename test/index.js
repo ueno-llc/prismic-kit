@@ -29,11 +29,20 @@ describe('PrismicKit', () => {
       }).to.throw(TypeError);
     });
 
+    it('throws a TypeError if Prismic link resovler is not a function', () => {
+      const PrismicKit = loadModule();
+
+      expect(() => {
+        PrismicKit.config({ repoName: 'repo' });
+      }).to.throw(TypeError);
+    });
+
     it('can also fetch the config', () => {
       const PrismicKit = loadModule();
       const config = {
         repoName: 'repo',
         accessToken: 'kittens',
+        linkResolver: () => '/',
       };
 
       PrismicKit.config(config);

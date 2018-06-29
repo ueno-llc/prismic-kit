@@ -17,7 +17,7 @@ const linkResolver = () => {};
 
 describe('Express middleware', () => {
   before(() => {
-    PrismicKit.config({ repoName, accessToken });
+    PrismicKit.config({ repoName, accessToken, linkResolver });
   });
 
   after(() => {

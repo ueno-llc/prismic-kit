@@ -8,12 +8,13 @@ import queryPrismic from '../src/query';
 
 const repoName = 'repo';
 const accessToken = 'kittens';
+const linkResolver = () => '/';
 const mockPrismicApi = Symbol('mockPrismicApi');
 
 describe('queryPrismic()', () => {
   before(() => {
     sinon.stub(Prismic, 'getApi').resolves(mockPrismicApi);
-    PrismicKit.config({ repoName, accessToken });
+    PrismicKit.config({ repoName, accessToken, linkResolver });
   });
 
   afterEach(() => Prismic.getApi.resetHistory());
