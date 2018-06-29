@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "description": "Helpful tools for building Prismic apps in React",
   "main": "index.js",
+  "files": [
+    "*.js",
+    "dist/**/*.js"
+  ],
   "scripts": {
     "build": "babel src/ -d dist/",
     "lint": "eslint 'src/**/*.js' 'test/**/*.js'",
