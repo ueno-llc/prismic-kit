@@ -12,7 +12,7 @@
   - [Fetching on the client](#fetching-on-the-client)
   - [Rendering slice zones](#rendering-slice-zones)
   - [Enabling previews and webhooks](#enabling-previews-and-webhooks)
-    - [Fetching previews on the client](#fetching-previews-on-the-client)
+  - [Fetching previews on the client](#fetching-previews-on-the-client)
 - [Local Development](#local-development)
 - [License](#license)
 
@@ -39,7 +39,7 @@ This library has the following peer dependencies:
 
 ### Configuration
 
-To use the querying function `query` or Express middleware `middleware`, you'll need to configure prismic-kit with your Prismic repo name, link resolver, and access token. The access token is optional, but you need it to fetch Prismic previews.
+To use the querying function `query` or Express middleware `middleware`, you'll need to configure prismic-kit with your Prismic repo name, link resolver, and access token. The access token is optional, but you need it in order to fetch Prismic previews.
 
 ```js
 import PrismicKit from '@ueno/prismic-kit';
@@ -166,18 +166,6 @@ export default ({ page }) => (
 
 To enable preview and webhook support, use this Express middleware.
 
-- The route `GET /preview` is used for Prismic previews.
-  - A Prismic preview cookie is sent with the response.
-  - A `302 Found` status is returned to redirect the user to the correct page.
-- The route `POST /webhook` is used for triggering webhooks.
-  - If you specify a `webhookCallback` in the middleware, triggering the webhook will run the given function. The function can be asynchronous or return a Promise.
-  - If you specify a `webhookSecret`, the webhook will only trigger if the given secret is sent in the body of the request. You can configure this secret in the "Webhooks" section of your Prismic repo's settings.
-  - This route can return any of these status codes:
-    - `200 OK` if the webhook callback finished.
-    - `500 Internal Server Error` if the webhook threw an error or a Promise rejected.
-    - `400 Bad Request` if a secret was sent in the request, but you didn't configure a `webhookSecret`.
-    - `401 Unauthorized` if the secret sent in the request doesn't match `webhookSecret`, or if no secret was sent.
-
 ```js
 // server.js
 import express from 'express';
@@ -195,15 +183,37 @@ app.use('/api/prismic', prismicMiddleware({
 }));
 ```
 
-#### Fetching previews on the client
+#### Webhooks
 
-We render Prismic previews like so:
+The route `POST /webhook` is used for triggering webhooks.
 
-- Do the initial render on the server. (The server can't see the preview cookie, so it can't fetch the preview version.)
+If you specify a `webhookCallback` in the middleware, triggering the webhook will run the given function. The function can be synchronous, or asynchronous/Promise-returning.
+
+If you specify a `webhookSecret`, the webhook will only trigger if the given secret is sent in the body of the request. You can configure this secret in the "Webhooks" section of your Prismic repo's settings.
+
+This route can return any of these status codes:
+  - `200 OK` if the webhook callback finished.
+  - `500 Internal Server Error` if the webhook threw an error or a Promise rejected.
+  - `400 Bad Request` if a secret was sent in the request, but you didn't configure a `webhookSecret`.
+  - `401 Unauthorized` if the secret sent in the request doesn't match `webhookSecret`, or if no secret was sent.
+
+#### Previews
+
+The route `GET /preview` is used for Prismic previews. A Prismic preview cookie is sent with the response, and the `302 Found` status is used to redirect the user to the correct page.
+
+### Fetching previews on the client
+
+If you use server-side rendering in your React app, ordinarily you can't fetch Prismic previews on the server, because the server can't see the preview cookie.
+
+With this in mind, we render Prismic previews like so:
+
+- Do the initial render on the server.
 - On the client, check if the Prismic preview cookie was set.
 - If it is, unmount the app and then immediately remount it, forcing all the network requests to happen again, thus loading the preview version.
 
-To help with this, you can wrap your entire app in the `<PrismicPreviewLoader />` component.
+Like the [querying function](#fetching-on-the-client), this process is build around react-jobs, because re-mounting a component will make all of its network requests happen again.
+
+To help with this, you can wrap your entire app in the `<PrismicPreviewLoader />` component. It will re-mount all of its children if a Prismic preview cookie is found.
 
 ```js
 import React, { Component } from 'react';
