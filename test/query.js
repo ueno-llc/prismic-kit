@@ -74,30 +74,11 @@ describe('queryPrismic()', () => {
     });
   });
 
-  it('always returns a new API wrapper on the server', () => {
+  it('always returns a new API wrapper', () => {
     const runQuery = queryPrismic(() => {});
 
     return runQuery().then(() => runQuery()).then(() => {
       expect(Prismic.getApi).to.have.callCount(2);
-    });
-  });
-
-  describe('Browser Environment', () => {
-    beforeEach(() => {
-      global.window = {};
-    });
-
-    afterEach(() => {
-      delete global.window;
-      Prismic.getApi.reset();
-    });
-
-    it('caches the API wrapper on subsequent calls', () => {
-      const runQuery = queryPrismic(() => {});
-
-      return runQuery().then(() => runQuery()).then(() => {
-        expect(Prismic.getApi).to.have.callCount(1);
-      });
     });
   });
 });

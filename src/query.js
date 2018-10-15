@@ -1,8 +1,6 @@
 import Prismic from 'prismic-javascript';
 import PrismicKit from '.';
 
-const PRISMIC_API = '__PRISMIC_API__';
-
 /**
  * Create work function for react-jobs that has access to a Prismic API instance, and the props of
  * a component.
@@ -21,35 +19,15 @@ export default function queryPrismic(fn) {
   }
 
   /**
-   * Get a Prismic API instance.
-   * @returns {Promise.<Object>} Promise containing Prismic API instance.
-   * @private
-   */
-  async function getApi() {
-    return Prismic.getApi(`https://${repoName}.prismic.io/api/v2`, {
-      accessToken,
-    });
-  }
-
-  /**
    * Function to pass to react-jobs.
    * @callback PrismicWorkFunction
    * @param {Object} props - Component props.
    * @returns {Promise.<*>} Promise containing job result.
    */
   return async (props) => {
-    let api;
-
-    if (typeof window === 'undefined') {
-      // On the server, always get a new API ref
-      api = await getApi();
-    } else if (window[PRISMIC_API]) {
-      // On the client, reuse the same API ref within a session
-      api = window[PRISMIC_API];
-    } else {
-      window[PRISMIC_API] = await getApi();
-      api = window[PRISMIC_API];
-    }
+    const api = await Prismic.getApi(`https://${repoName}.prismic.io/api/v2`, {
+      accessToken,
+    });
 
     /**
      * Function that fetches from Prismic.
